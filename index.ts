@@ -1,15 +1,18 @@
 import {
+    CMapEntity,
     CMapGroup,
+    CMapRootElement,
     CMapWorld,
     CStoredCamera,
     CStoredCameras,
     DmePlugList,
     ElementArray,
     QAngle,
+    VMap,
     Vector3,
 } from "./types";
 
-export default function parseVmap(str) {
+export default function parseVmap(str): VMap {
     let i = 0;
 
     return parseRoot();
@@ -70,7 +73,7 @@ export default function parseVmap(str) {
 
         skipWhitespace();
 
-        let array = [];
+        let array: any[] = [];
 
         while (i < str.length) {
             if (peek() === "]") {
@@ -80,19 +83,12 @@ export default function parseVmap(str) {
 
             skipWhitespace();
             const type = parseString();
-
-            let val = null;
-
             skipWhitespace();
-            if (peek() === ",") i++;
-            else {
-                // objects are stored as "TYPE" \n { ... }
-                val = parseObject() ?? parseString() ?? parseArray() ?? null;
-            }
 
-            array.push(val ?? type);
-
+            const val = parseByType(type);
+            array.push(val);
             skipWhitespace();
+
             if (peek() === ",") i++;
         }
 
@@ -139,7 +135,7 @@ export default function parseVmap(str) {
 
         skipWhitespace();
 
-        let object = {};
+        const object = {};
 
         while (i < str.length) {
             if (peek() === "}") {
@@ -153,76 +149,90 @@ export default function parseVmap(str) {
                 const type = parseString();
 
                 skipWhitespace();
-
-                let value: any = null;
-
-                switch (type) {
-                    case "element_array":
-                        value = parseElementArray() as ElementArray;
-                        break;
-                    case "string":
-                    case "uint64":
-                        value = parseString();
-                        break;
-                    case "bool":
-                        value = !!parseString();
-                        break;
-                    case "float":
-                        value = parseFloat(parseString() ?? "0");
-                        break;
-                    case "int":
-                        value = parseInt(parseString() ?? "0");
-                        break;
-                    case "CStoredCamera":
-                        value = parseObject() as CStoredCamera;
-                        break;
-                    case "CStoredCameras":
-                        value = parseObject() as CStoredCameras;
-                        break;
-                    case "CMapWorld":
-                        value = parseObject() as CMapWorld;
-                        break;
-                    case "CMapGroup":
-                        value = parseObject() as CMapGroup;
-                        break;
-                    case "EditGameClassProps":
-                        value = parseObject();
-                        break;
-                    case "DmePlugList":
-                        value = parseObject() as DmePlugList;
-                        break;
-                    case "string_array":
-                        value = parseArray() as string[];
-                        break;
-                    case "int_array":
-                        value = parseArray()?.map(Number) as number[];
-                        break;
-                    case "qangle":
-                        const q = parseString()?.split(" ").map(Number) ?? [0, 0, 0];
-                        value = [q[0], q[1], q[2]] as QAngle;
-                        break;
-                    case "vector3":
-                        const v = parseString()?.split(" ").map(Number) ?? [0, 0, 0];
-                        value = [v[0], v[1], v[2]] as Vector3;
-                        break;
-                    case "object":
-                        value = parseObject();
-                        break;
-                    case "array":
-                        value = parseArray();
-                        break;
-                    default:
-                        value = parseString() ?? parseObject() ?? parseArray();
-                        break;
-                }
-
-                object[key] = value;
-
+                object[key] = parseByType(type);
                 skipWhitespace();
             }
         }
 
         return Object.keys(object).length ? object : null;
+    }
+
+    function parseByType(type: string | null) {
+        let value: any = null;
+        switch (type) {
+            case "element_array":
+                value = parseElementArray() as ElementArray;
+                break;
+            case "string":
+            case "uint64":
+                value = parseString();
+                break;
+            case "bool":
+                value = !!parseString();
+                break;
+            case "float":
+                value = parseFloat(parseString() ?? "0");
+                break;
+            case "int":
+                value = parseInt(parseString() ?? "0");
+                break;
+            case "CStoredCamera":
+                value = parseObject() as CStoredCamera;
+                value.__type = "CStoredCamera";
+                break;
+            case "CStoredCameras":
+                value = parseObject() as CStoredCameras;
+                value.__type = "CStoredCameras";
+                break;
+            case "CMapWorld":
+                value = parseObject() as CMapWorld;
+                value.__type = "CMapWorld";
+                break;
+            case "CMapGroup":
+                value = parseObject() as CMapGroup;
+                value.__type = "CMapGroup";
+                break;
+            case "CMapEntity":
+                value = parseObject() as CMapEntity;
+                value.__type = "CMapEntity";
+                break;
+            case "CMapRootElement":
+                value = parseObject() as CMapRootElement;
+                value.__type = "CMapRootElement";
+                break;
+            case "EditGameClassProps":
+                value = parseObject();
+                value.__type = "EditGameClassProps";
+                break;
+            case "DmePlugList":
+                value = parseObject() as DmePlugList;
+                value.__type = "DmePlugList";
+                break;
+            case "string_array":
+                value = parseArray() as string[];
+                break;
+            case "int_array":
+                value = parseArray()?.map(Number) as number[];
+                break;
+            case "qangle":
+                const q = parseString()?.split(" ").map(Number) ?? [0, 0, 0];
+                value = [q[0], q[1], q[2]] as QAngle;
+                break;
+            case "vector3":
+                const v = parseString()?.split(" ").map(Number) ?? [0, 0, 0];
+                value = [v[0], v[1], v[2]] as Vector3;
+                break;
+            // case "object":
+            //     value = parseObject();
+            //     break;
+            case "array":
+                value = parseArray();
+                break;
+            default:
+                value = parseObject() ?? parseString() ?? parseArray();
+                break;
+        }
+        return value;
     }
 
     function parseRoot() {

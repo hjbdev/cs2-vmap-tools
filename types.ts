@@ -3,7 +3,11 @@ export interface PrefixElement {
     map_asset_references: string[];
 }
 
-export interface CMapRootElement {
+interface HasType {
+    __type: string;
+}
+
+export interface CMapRootElement extends HasType {
     id: string;
     isprefab: boolean;
     editorbuild: number;
@@ -20,13 +24,13 @@ export interface CMapRootElement {
 
 export type Vector3 = [number, number, number];
 
-export interface CStoredCamera {
+export interface CStoredCamera extends HasType {
     id: string;
     position: Vector3;
     lookat: Vector3;
 }
 
-export interface CStoredCameras {
+export interface CStoredCameras extends HasType {
     id: string;
     activecamera: number;
     cameras: CStoredCamera[];
@@ -34,7 +38,7 @@ export interface CStoredCameras {
 
 export type QAngle = [number, number, number];
 
-export interface CMapWorld {
+export interface CMapWorld extends HasType {
     id: string;
     nextDecalID: number;
     fixupEntityNames: boolean;
@@ -50,7 +54,7 @@ export interface CMapWorld {
     children: ElementArray;
 }
 
-export interface CMapEntity {
+export interface CMapEntity extends HasType {
     id: string;
     name: string;
     hitNormal: Vector3;
@@ -71,7 +75,7 @@ export interface CMapEntity {
     variableNames: string[];
 }
 
-export interface CMapGroup {
+export interface CMapGroup extends HasType {
     id: string;
     name: string;
     origin: Vector3;
@@ -87,7 +91,7 @@ export interface CMapGroup {
     variableNames: string[];
 }
 
-export interface DmePlugList {
+export interface DmePlugList extends HasType {
     id: string;
     names: string[];
     dataTypes: number[];
@@ -95,7 +99,7 @@ export interface DmePlugList {
     descriptions: string[];
 }
 
-export interface EditGameClassProps {
+export interface EditGameClassProps extends HasType {
     id: string;
     classname: string;
     mapUsageType: string;
@@ -131,3 +135,9 @@ export interface EditGameClassProps {
 }
 
 export type ElementArray = any[]; // @todo
+
+export interface VMap extends HasType { 
+    "$prefix_element$": PrefixElement;
+    CMapRootElement: CMapRootElement;
+    CMapGroup: CMapGroup;
+}
