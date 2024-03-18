@@ -1,0 +1,8 @@
+{
+    "name": "cs2-vmap-tools",
+    "module": "index.ts",
+    "type": "module",
+    "main": "index.js",
+    "license": "MIT",
+    "author": "Harry Bayliss <harry@hjb.dev> (https://hjb.dev)"
+}
