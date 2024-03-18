@@ -1,6 +1,6 @@
 import Bun from "bun";
 import { parseArgs } from "util";
-import parseVmap from './index.js';
+import parseVmap from './index.ts';
 
 const { values } = parseArgs({
     args: Bun.argv,
