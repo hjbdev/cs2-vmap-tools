@@ -14,15 +14,15 @@ export default function parseVmap(str) {
 
     return parseRoot();
 
-    function peek() {
+    function peek(): string {
         return str[i];
     }
 
-    function next(n = 1) {
+    function next(n = 1): string {
         return str[i + n];
     }
 
-    function skipWhitespace() {
+    function skipWhitespace(): void {
         while (i < str.length && /\s/.test(peek())) i++;
     }
 
