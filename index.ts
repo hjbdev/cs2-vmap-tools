@@ -1,4 +1,13 @@
-import { CMapGroup, CMapWorld, CStoredCamera, CStoredCameras, DmePlugList, ElementArray, QAngle, Vector3 } from "./types";
+import {
+    CMapGroup,
+    CMapWorld,
+    CStoredCamera,
+    CStoredCameras,
+    DmePlugList,
+    ElementArray,
+    QAngle,
+    Vector3,
+} from "./types";
 
 export default function parseVmap(str) {
     let i = 0;
@@ -17,7 +26,7 @@ export default function parseVmap(str) {
         while (i < str.length && /\s/.test(peek())) i++;
     }
 
-    function parseComment() {
+    function parseComment(): string | null {
         if (peek() === "<" && next() === "!" && next(2) === "-" && next(3) === "-") i += 4;
         else return;
 
@@ -36,7 +45,7 @@ export default function parseVmap(str) {
         return comment || null;
     }
 
-    function parseString() {
+    function parseString(): string | null {
         if (peek() === '"') i++;
         else return null;
 
@@ -90,9 +99,9 @@ export default function parseVmap(str) {
         return array.length ? array : null;
     }
 
-    function parseArray() {
+    function parseArray(): any[] | null {
         if (peek() === "[") i++;
-        else return;
+        else return null;
 
         skipWhitespace();
 
@@ -116,7 +125,15 @@ export default function parseVmap(str) {
         return array.length ? array : null;
     }
 
-    function parseObject() {
+    function parseObject():
+        | CMapWorld
+        | CMapGroup
+        | CStoredCamera
+        | CStoredCameras
+        | DmePlugList
+        | ElementArray
+        | null
+        | {} {
         if (peek() === "{") i++;
         else return null;
 
@@ -194,7 +211,7 @@ export default function parseVmap(str) {
                     case "array":
                         value = parseArray();
                         break;
-                    default: 
+                    default:
                         value = parseString() ?? parseObject() ?? parseArray();
                         break;
                 }
