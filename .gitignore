@@ -179,3 +179,4 @@ dist
 output.json
 data/*
 *-places.json
+*.csv

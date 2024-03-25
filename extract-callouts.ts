@@ -69,9 +69,9 @@ for (const entity of envCsPlaces) {
     let position: string | null = null;
 
     for (const line of contents.split("\n")) {
-        if (position) continue;
         if (line.includes("position$0") && !line.includes("vertexFormat")) {
             position = line;
+            break;
         }
     }
 
