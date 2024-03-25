@@ -108,12 +108,13 @@ for (const entity of envCsPlaces) {
     const [origin_x, origin_y, origin_z] = entity.origin;
 
     const place = {
-        raw_min: [min_x, min_y, min_z],
-        raw_max: [max_x, max_y, max_z],
-        normalized_min: [origin_x + min_x, origin_y + min_y, origin_z + min_z],
-        normalized_max: [origin_x + max_x, origin_y + max_y, origin_z + max_z],
         name: entity.entity_properties.place_name,
-        origin: entity.origin,
+        min_x: origin_x + min_x,
+        min_y: origin_y + min_y,
+        min_z: origin_z + min_z,
+        max_x: origin_x + max_x,
+        max_y: origin_y + max_y,
+        max_z: origin_z + max_z,
     };
 
     places.push(place);
