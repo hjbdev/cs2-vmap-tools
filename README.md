@@ -28,7 +28,3 @@ bun cli.js --input=".\de_vertigo.vmap"
 ```bash
 bun add cs2-vmap-tools
 ```
-
-## To-do
-
-Callouts are entities now, as such to work out the dimensions I need to parse the model associated with them. The actual dimensions aren't stored in the vmap file.
