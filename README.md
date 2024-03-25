@@ -1,9 +1,14 @@
-# CS2 VMap Tools
+# CS2 VMap Parsing + Place Name Extraction
 
 The CLI is written for Bun. The parseVmap library will work with either Bun or Node.
 
+If you want to read about how this library came about, click [here](https://hjb.dev/posts/counter-strike-2-where-are-all-the-callouts-2).
+
+## The Problem
+In CS:GO, you could extract place names from maps by parsing the nav file. In 2, place names are stored as env_cs_place entities.
+
 ## Decompilation
-First, decompile your map with [Source 2 Viewer](https://valveresourceformat.github.io/). We only need the `vmap` file. `vmap_c` will NOT work.
+First, decompile your map with [Source 2 Viewer](https://valveresourceformat.github.io/). We need the **entire** map decompiled, entities and all. Don't change the folder structure after decompile.
 
 ## Usage
 Import the vmap file as a string. Call `parseVMap` with that string.
