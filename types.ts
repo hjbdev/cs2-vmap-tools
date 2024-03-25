@@ -132,6 +132,8 @@ export interface EditGameClassProps extends HasType {
     steamaudio_pathing_visibility_threshold: string;
     steamaudio_pathing_visibility_pathrange: string;
     description: string;
+    place_name: string;
+    model: string;
 }
 
 export type ElementArray = any[]; // @todo

@@ -174,5 +174,8 @@ dist
 # Finder (MacOS) folder config
 .DS_Store
 
-de_vertigo.vmap
+*.vmap
+*.vpk
 output.json
+data/*
+*-places.json
